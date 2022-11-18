@@ -1,0 +1,13 @@
+CMakeFiles/
+CMakeCache.txt
+
+build/
+bld*/
+inst*/
+gsl.def
+*.nupkg
+/build
+Testing/
+.qt/
+.vscode/
+
