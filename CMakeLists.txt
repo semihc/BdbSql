@@ -3,11 +3,9 @@ PROJECT(BdbSql)
 cmake_minimum_required(VERSION 3.24)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
-add_library(sqlite3 STATIC src/sqlite3.c src/sqlite3.h)
-add_executable(sqlite src/sqlite3.c src/shell.c src/sqlite3.h)
-#set_target_properties(sqlite PROPERTIES OUTPUT_NAME sqlite3)
+add_library(dbsql STATIC src/sqlite3.c src/sqlite3.h)
+add_executable(dbsql3 src/sqlite3.c src/shell.c src/sqlite3.h)
 
-#cmake_policy(SET CMP0100 NEW)
 # Common inc/lib/src locations by default
 set(_opt /opt)
 set(_opt_TC ${_opt}/TC)
@@ -41,17 +39,16 @@ add_definitions(-D_HAVE_SQLITE_CONFIG_H)
 #add_definitions(-DSQLITE_THREADSAFE=0)
 
 if(WIN32)
-  add_custom_command(TARGET sqlite POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:sqlite> ${CMAKE_BINARY_DIR}/sqlite3.exe
-    DEPENDS sqlite
+  add_custom_command(TARGET dbsql3 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dbsql3> ${CMAKE_BINARY_DIR}/dbsql.exe
+    DEPENDS dbsql3
   )
-  install(FILES sqlite3.exe DESTINATION bin)
+  install(FILES dbsql.exe DESTINATION bin)
 else()
   include(FindThreads)
-  target_link_libraries(sqlite -L${_opt}/local/lib -ldb ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})
-  #target_link_libraries(bdb_test PRIVATE tcbase tcbdb Qt6::Core -lgtest -ldb_stl -ldb_cxx -lcrypto -lssl)
-  install(TARGETS sqlite RUNTIME DESTINATION bin)
+  target_link_libraries(dbsql3 -L${_opt}/local/lib -ldb ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})
+  install(TARGETS dbsql3 RUNTIME DESTINATION bin)
 endif()
 
 install(FILES src/sqlite3.h DESTINATION include)
-install(TARGETS sqlite3 LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(TARGETS dbsql LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
